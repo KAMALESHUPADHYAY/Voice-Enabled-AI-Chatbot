@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <script src="scrip4.js" defer></script>
+
+  <style>
+    /* Animation to move the background image */
+    @keyframes moveBackground {
+      0% {
+        background-position: 0% center;
+      }
+      100% {
+        background-position: 100% center;
+      }
+    }
+
+    body {
+      animation: moveBackground 10s linear infinite; /* Adjust duration as needed */
+    }
+  </style>
+</head>
+
+<body style="background-image: url('https://www.shutterstock.com/shutterstock/photos/2261899773/display_1500/stock-photo-chatbot-conversation-ai-artificial-intelligence-technology-online-customer-service-digital-chatbot-2261899773.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;" class="min-h-screen bg-fixed relative">
+
+  <!-- Overlay -->
+  <div class="absolute inset-0 bg-white bg-opacity-80 pointer-events-none z-0"></div>
+
+  <button id="toggleSidebar" class="absolute top-4 left-4 z-50 text-2xl text-emerald-800 focus:outline-none">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <aside id="sidebar" class="fixed top-0 left-0 w-64 bg-white border-r p-4 h-screen shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out z-40 overflow-y-auto">
+    <h2 class="text-xl font-semibold mt-8 mb-4 text-emerald-700 bg-emerald-200 rounded-lg w-40 text-center">Chat History</h2>
+    <ul id="history-list" class="space-y-2 text-sm text-gray-700 bg-blue-200 rounded-lg w-50 p-2"></ul>
+    <button onclick="clearHistory()" class="mt-4 w-full bg-red-100 hover:bg-red-200 text-red-600 font-semibold py-2 px-4 rounded-lg">
+        🗑️ Delete History
+    </button>
+  </aside>
+
+  <header class="mx-auto text-center mt-4 mb-2 p-2 bg-emerald-100 rounded-lg max-w-3xl z-10 relative">
+    <h1 class="text-4xl font-bold text-emerald-800 mb-4">AI Assistant</h1>
+    <p class="text-lg text-emerald-700 underline underline-offset-4">Your Personal AI Guide</p>      
+  </header>
+
+  <div class="flex-1 p-6 m-2 z-10 relative">
+    <div class="flex justify-between items-start mb-6">
+      <div class="flex flex-col gap-4 w-[14%]">
+        <img src="1.jpg" class="w-full rounded-lg shadow-lg" />
+        <img src="2.jpg" class="w-full rounded-lg shadow-lg" />
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-4 flex-1 mx-4">
+        <div id="chat-container" class="h-96 overflow-y-auto mb-4 space-y-4 px-2 py-2 bg-white rounded-lg shadow-inner"></div>
+        <div class="flex gap-4">
+          <input
+            type="text"
+            id="user-input"
+            class="flex-1 p-3 border border-emerald-300 rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-emerald-400"
+            placeholder="Ask me anything..."
+            onkeydown="handleKeyPress(event)"
+          />
+          <button onclick="startSpeech()" class="bg-blue-400 text-white px-4 rounded-full hover:bg-blue-500">🎙</button>
+          <button onclick="sendMessage()" class="bg-emerald-600 text-white px-6 py-3 rounded-full shadow hover:bg-emerald-700">
+            Send
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-4 w-[14%]">
+        <img src="3.jpg" class="w-full rounded-lg shadow-lg" />
+        <img src="4.jpg" class="w-full rounded-lg shadow-lg" />
+      </div>
+    </div>
+
+    <div class="mx-auto max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+      <button onclick="quickStart('5-min session')" class="btn">🕔 5-Min Session</button>
+      <button onclick="quickStart('calm me')" class="btn">🧘 Calm me</button>
+      <button onclick="quickStart('breathing exercise')" class="btn">🌬️ Breathing</button>
+      <button onclick="quickStart('sleep meditation')" class="btn">🌙 Sleep Aid</button>
+    </div>
+  </div>
+
+  <div class="max-w-5xl mx-auto p-12 m-4 z-10 relative">
+    <div class="grid md:grid-cols-3 gap-8 text-center">
+      <div class="flex flex-col items-center" data-aos="fade-up" data-aos-delay="100">
+        <div class="w-20 h-20 flex items-center justify-center rounded-full bg-yellow-200"></div>
+        <h3 class="text-xl font-semibold mt-4">AI powered</h3>
+        <p class="text-gray-600 mt-2">
+          Instant assistance <br>
+          Get immediate <span class="font-bold">answers</span> to all your questions. <br>
+          <span class="font-bold">Talk with</span> AI Assistant anytime, anywhere
+        </p>
+      </div>
+
+      <div class="flex flex-col items-center" data-aos="fade-up" data-aos-delay="200">
+        <div class="w-20 h-20 flex items-center justify-center rounded-full bg-green-200"></div>
+        <h3 class="text-xl font-semibold mt-4">Effortless</h3>
+        <p class="text-gray-600 mt-2">
+          3-second responses <br>
+          Text & Voice assistance<br>
+          Easy-to-use Interface
+        </p>
+      </div>
+
+      <div class="flex flex-col items-center" data-aos="fade-up" data-aos-delay="300">
+        <div class="w-20 h-20 flex items-center justify-center rounded-full bg-blue-200"></div>
+        <h3 class="text-xl font-semibold mt-4">Completely Private</h3>
+        <p class="text-gray-600 mt-2">
+          No registration required <br>
+          Your data is safe <br>
+          No ads, just AI support
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-container p-2 max-w-4xl z-10 relative">
+    <h2 class="text-2xl bg-emerald-200 rounded-lg w-20 text-center">FAQ</h2>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        HOW DOES AI ASSISTANT WORK? <span class="faq-icon">▼</span>
+      </button>
+      <div class="faq-answer">AI Assistant uses natural language processing (NLP) to understand your queries and respond instantly. It can handle a wide range of tasks, from providing information and offering suggestions to making your tasks easier through speech recognition. It's an intelligent and interactive assistant designed to assist with daily activities and queries. It also adapts to your preferences over time, ensuring you get the best experience possible.</div>
+    </div>
+
+    <!-- More FAQ items here -->
+
+  </div>
+
+  <div class="text-md text-center p-16 m-4 z-10 relative">AI Assistant is here to make your life easier and more productive. It’s not a substitute for professional advice, but it is always here to provide helpful insights and assist with your day-to-day tasks.</div>
+
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+</body>
+</html>
